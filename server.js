@@ -26,12 +26,9 @@ mongoose.connect(MONGODB_URI, {
   useUnifiedTopology: true,
 });
 
-// --- Routes (you'll implement these in your stripped repo) ---
-// app.use("/facts", require("./src/routes/facts"));
+app.use("/facts", require("./src/routes/facts"));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server listening on 0.0.0.0:${PORT}`);
 });
-
-app.use("/facts", require("./src/routes/facts"));
