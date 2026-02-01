@@ -19,6 +19,12 @@ app.get("/health", (req, res) => res.json({ ok: true }));
 // --- Routes ---
 app.use("/facts", require("./src/routes/facts"));
 
+// --- Error handler (must be after routes) ---
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ error: "Internal Server Error" });
+});
+
 const PORT = process.env.PORT || 3000;
 
 (async () => {
