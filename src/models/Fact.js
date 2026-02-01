@@ -1,4 +1,3 @@
-// src/models/Fact.js
 const mongoose = require("mongoose");
 
 const FactSchema = new mongoose.Schema(
