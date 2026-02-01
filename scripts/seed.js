@@ -1,9 +1,9 @@
 require("dotenv").config();
 
-const mongoose = require("mongoose");
 const fs = require("fs");
 const path = require("path");
 const Fact = require("../src/models/Fact");
+const { connectDB } = require("../src/db/connect");
 
 const MONGODB_URI = process.env.MONGODB_URI;
 if (!MONGODB_URI) {
@@ -12,7 +12,7 @@ if (!MONGODB_URI) {
 }
 
 async function seed() {
-  await mongoose.connect(MONGODB_URI);
+  await connectDB();
 
   const count = await Fact.countDocuments();
   if (count > 0) {

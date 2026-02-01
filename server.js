@@ -1,9 +1,10 @@
 require("dotenv").config();
 
 const express = require("express");
-const mongoose = require("mongoose");
 const morgan = require("morgan");
 const cors = require("cors");
+
+const { connectDB } = require("./src/db/connect");
 
 const app = express();
 
@@ -15,20 +16,20 @@ app.use(express.json());
 // --- Health check ---
 app.get("/health", (req, res) => res.json({ ok: true }));
 
-// --- MongoDB ---
-const MONGODB_URI = process.env.MONGODB_URI;
-if (!MONGODB_URI) {
-  throw new Error("Missing MONGODB_URI in environment variables");
-}
-
-mongoose.connect(MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
+// --- Routes ---
 app.use("/facts", require("./src/routes/facts"));
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server listening on 0.0.0.0:${PORT}`);
-});
+
+(async () => {
+  try {
+    await connectDB();
+
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`Server listening on 0.0.0.0:${PORT}`);
+    });
+  } catch (err) {
+    console.error("❌ Failed to start server:", err.message || err);
+    process.exit(1);
+  }
+})();
