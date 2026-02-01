@@ -1,4 +1,8 @@
+# cat-fact-rebuild
+
 ![Cat Facts logo](http://i.imgur.com/9RGJ5Ea.png)
+
+Rebuilding an open source project API & DB
 
 Using a combination of Node.js, Angular, and Tasker, this app will combine APIs and Services from the web to do just one thing... send cat facts.
 
