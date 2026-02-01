@@ -6,36 +6,43 @@ const cors = require("cors");
 
 const { connectDB } = require("./src/db/connect");
 
-const app = express();
+function createApp() {
+  const app = express();
 
-// --- Middleware ---
-app.use(morgan("dev"));
-app.use(cors());
-app.use(express.json());
+  // Middleware
+  app.use(morgan("dev"));
+  app.use(cors());
+  app.use(express.json());
 
-// --- Health check ---
-app.get("/health", (req, res) => res.json({ ok: true }));
+  // Routes
+  app.get("/health", (_req, res) => res.json({ ok: true }));
+  app.use("/facts", require("./src/routes/facts"));
 
-// --- Routes ---
-app.use("/facts", require("./src/routes/facts"));
+  // Error handling (keep last)
+  app.use((err, _req, res, _next) => {
+    console.error(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  });
 
-// --- Error handler (must be after routes) ---
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).json({ error: "Internal Server Error" });
+  return app;
+}
+
+function listen(app) {
+  const port = process.env.PORT || 3000;
+
+  app.listen(port, "0.0.0.0", () => {
+    console.log(`Server listening on 0.0.0.0:${port}`);
+  });
+}
+
+async function main() {
+  await connectDB();
+
+  const app = createApp();
+  listen(app);
+}
+
+main().catch((err) => {
+  console.error("❌ Failed to start server:", err.message || err);
+  process.exit(1);
 });
-
-const PORT = process.env.PORT || 3000;
-
-(async () => {
-  try {
-    await connectDB();
-
-    app.listen(PORT, "0.0.0.0", () => {
-      console.log(`Server listening on 0.0.0.0:${PORT}`);
-    });
-  } catch (err) {
-    console.error("❌ Failed to start server:", err.message || err);
-    process.exit(1);
-  }
-})();
