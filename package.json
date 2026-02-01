@@ -7,8 +7,7 @@
   "author": "Alex Wohlbruck <alexwohlbruck@gmail.com>",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js --ignore /public",
-    "seed": "node scripts/seed.js"
+    "dev": "nodemon server.js --ignore /public"
   },
   "dependencies": {
     "apiai": "^4.0.0",
